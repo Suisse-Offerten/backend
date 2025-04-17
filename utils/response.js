@@ -11,7 +11,7 @@ const response = {
   OTP_MATCH_SUCCESS_MESSAGE: "otp matched",
   OTP_NOT_MATCH_MESSAGE: "otp does not match",
   PASSWORD_CHANGE_SUCCESS_MESSAGE: "password changed successful",
-  DELETE_SUCCESS_MESSAGE: "account delete successful",
+  DELETE_SUCCESS_MESSAGE: "delete successful",
   USERNAME_ALREADY_EXIST_MESSAGE: "username already exist",
   REGISTRATION_VERIFY_OTP_MESSAGE:
     "registration successful, please check your email",
