@@ -81,6 +81,10 @@ async function createMembershipPayment(req, res) {
       success_url: successUrl,
       cancel_url: failedUrl,
       metadata: { sellerId: id, planId: _id },
+      automatic_tax: { enabled: true },
+      customer_update: {
+        address: "auto",
+      },
     });
 
     await TransactionModel.create({
@@ -117,7 +121,7 @@ async function createMembershipPayment(req, res) {
 async function createCreditsPayment(req, res) {
   const { id, credits, price, sellerId } = req.body;
   const successUrl = `${baseURL}/seller-dashboard/seller-credit/payment-success`;
-  const failedUrl = `${baseURL}/seller-dashboard/seller-credit/payment-fail`;
+  const failedUrl = `${baseURL}/seller-dashboard/seller-credit`;
   const existSeller = await SellerModel.findOne({ _id: sellerId });
 
   const { username, email } = existSeller || {};
