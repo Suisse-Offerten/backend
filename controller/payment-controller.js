@@ -142,8 +142,8 @@ async function createCreditsPayment(req, res) {
           price_data: {
             currency: "CHF",
             product_data: {
-              name: `${credits} Credit`,
-              description: `You are purchasing ${credits} Credits for CHF ${price}.`,
+              name: `${credits} Credits`,
+              description: `Sie kaufen ${credits} Gutschriften für CHF ${price}.`,
             },
             unit_amount: price * 100, // Ensure price is in cents
           },
@@ -161,7 +161,7 @@ async function createCreditsPayment(req, res) {
       metadata: {
         sellerId: sellerId,
         creditId: id,
-        additional_info: `Purchase of ${credits} credits`,
+        additional_info: `Kauf von ${credits} Credits`,
       },
     });
     await TransactionModel.create({
