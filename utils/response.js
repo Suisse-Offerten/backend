@@ -66,6 +66,7 @@ const response = {
   ROUTE_NOT_FOUND_MESSAGE: "route not found!",
   HOME_ROUTE_MESSAGE: "home route",
   INVALID_PLAN_MESSAGE: "Invalid plan selected",
+  QUERY_SUCCESS_FULL_MESSAGE: "Query successful",
 };
 
 module.exports = response;

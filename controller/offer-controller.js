@@ -478,7 +478,7 @@ async function createPerticipation(req, res) {
       const UpdateJob = {
         placeBid: bid,
       };
-      await sendEmailNotification(
+      await sendClientEmailNotification(
         firstname,
         email,
         `${YOU_HAVE_RECIVE_RESPONSE}: ${username}`,
@@ -507,7 +507,7 @@ async function makeOfferRequest(req, res) {
   const { jobId, sellerId, offerMessage } = req.body;
   const id = req.params.id;
   const existSeller = await SellerModel.findOne({ _id: sellerId });
-  const { email, firstName } = existSeller || {};
+  const { email, username: sellerName } = existSeller || {};
   const existJob = await JobModel.findOne({ _id: jobId });
   const clientEmail = existJob?.jobEmail;
   const existClient = await ClientModel.findOne({ email: clientEmail });
@@ -516,7 +516,8 @@ async function makeOfferRequest(req, res) {
     sellerId: sellerId,
   });
 
-  const { firstname } = existClient || {};
+  const { username: clientName } = existClient || {};
+
   const { jobTitle } = existJob || {};
   try {
     const requestData = {
@@ -543,15 +544,18 @@ async function makeOfferRequest(req, res) {
         updateCommunication,
         { new: true }
       );
-      await sendEmailNotification(
-        firstName,
+
+      await sendSellerEmailNotification(
+        sellerName,
         email,
-        `${firstname} ${SEND_OFFER_REQUEST_RESPONSE}`,
-        `${firstname} ${ASK_TO_MAKE_OFFER_RESPONSE}: ${jobTitle}. ${LOGIN_TO_CHECK_OFFER_RESPONSE}. ${
+        `${clientName} ${SEND_OFFER_REQUEST_RESPONSE}`,
+        `${clientName} ${ASK_TO_MAKE_OFFER_RESPONSE}: ${jobTitle}. ${LOGIN_TO_CHECK_OFFER_RESPONSE}. ${
           offerMessage &&
-          `<p style="font-weight: bold; color: #777; font-size: 18px">${firstname} ${MESSAGE_RESPONSE}: </p>${offerMessage}`
+          `<p style="font-weight: bold; color: #777; font-size: 18px">${clientName} ${MESSAGE_RESPONSE}: </p>${offerMessage}`
         }`,
-        firstname
+        clientName,
+        jobTitle,
+        jobId
       );
       await OfferModel.findByIdAndUpdate(id, requestData, { new: true });
     }
@@ -565,11 +569,11 @@ async function makeOfferRequest(req, res) {
 async function sendBidRequest(req, res) {
   const { offerPrice, priceUnit, offerNote, sellerId, jobId } = req.body;
   const existSeller = await SellerModel.findOne({ _id: sellerId });
-  const { username } = existSeller || {};
+  const { username: sellerName } = existSeller || {};
   const existJob = await JobModel.findOne({ _id: jobId });
   const { jobTitle, jobEmail, offerRequest } = existJob || {};
   const existClient = await ClientModel.findOne({ email: jobEmail });
-  const { email } = existClient || {};
+  const { email, username: clientName } = existClient || {};
   const existOffer = await OfferModel.findOne({
     jobId: jobId,
     sellerId: sellerId,
@@ -604,10 +608,10 @@ async function sendBidRequest(req, res) {
         };
 
         await sendBidEmail(
-          username,
+          clientName,
           email,
-          `${username} ${PLACE_A_BID_RESPONSE} ${jobTitle}`,
-          username,
+          `${sellerName} ${PLACE_A_BID_RESPONSE} ${jobTitle}`,
+          sellerName,
           offerPrice,
           priceUnit,
           offerNote
@@ -657,8 +661,8 @@ async function updateOfferRequest(req, res) {
     jobId: jobId,
     sellerId: sellerId,
   });
-  const { username: sellerName, email } = existSeller || {};
-  const { username } = existClient || {};
+  const { username: sellerName, email: sellerEmail } = existSeller || {};
+  const { username: clientName } = existClient || {};
   try {
     const acceptData = {
       status: "accept",
@@ -690,12 +694,15 @@ async function updateOfferRequest(req, res) {
         updateData,
         { new: true }
       );
-      await sendEmailNotification(
-        username,
-        email,
-        `${username} ${ACCEPT_OFFER_IN_THIS_JOB_RESPONSE}: ${jobTitle}`,
-        `${sellerName} ${YOU_HAVE_GOOD_NEWS_RESPONSE}. ${username} ${ACCEPT_OFFER_SUCCESS_RESPONSE}`,
-        username
+
+      await sendSellerEmailNotification(
+        sellerName,
+        sellerEmail,
+        `${clientName} ${ACCEPT_OFFER_IN_THIS_JOB_RESPONSE}: ${jobTitle}`,
+        `${sellerName} ${YOU_HAVE_GOOD_NEWS_RESPONSE}. ${clientName} ${ACCEPT_OFFER_SUCCESS_RESPONSE}`,
+        clientName,
+        jobTitle,
+        jobId
       );
       await JobModel.findByIdAndUpdate(jobId, acceptJobData, { new: true });
       await OfferModel.findByIdAndUpdate(id, acceptData, { new: true });
@@ -710,12 +717,14 @@ async function updateOfferRequest(req, res) {
           sellerId: offer.sellerId,
         });
 
-        await sendEmailNotification(
-          username,
+        await sendSellerEmailNotification(
+          rejectSeller.username,
           rejectSeller.email,
-          `${username} ${REJECT_OFFER_RESPONSE}`,
-          `${SORRY_INFROM_RESPONSE} ${username} ${DID_NOT_ACCEPT_OFFER_RESPONSE}: ${jobTitle}. ${LOGIN_DASHBOARD_TO_SEE_DETAILS_RESPONSE}`,
-          username
+          `${clientName} ${REJECT_OFFER_RESPONSE}`,
+          `${SORRY_INFROM_RESPONSE} ${clientName} ${DID_NOT_ACCEPT_OFFER_RESPONSE}: ${jobTitle}. ${LOGIN_DASHBOARD_TO_SEE_DETAILS_RESPONSE}`,
+          clientName,
+          jobTitle,
+          jobId
         );
         let rejectUpdateData = { $push: {} };
         rejectUpdateData.$push.clientMessage = {
@@ -746,12 +755,14 @@ async function updateOfferRequest(req, res) {
         date: new Date(),
         time: new Date().getTime(),
       };
-      await sendEmailNotification(
-        username,
-        email,
-        `${username} ${REJECT_OFFER_RESPONSE}`,
-        `${SORRY_INFROM_RESPONSE} ${username} ${DID_NOT_ACCEPT_OFFER_RESPONSE}: ${jobTitle}. ${LOGIN_DASHBOARD_TO_SEE_DETAILS_RESPONSE}`,
-        username
+      await sendSellerEmailNotification(
+        sellerName,
+        sellerEmail,
+        `${clientName} ${REJECT_OFFER_RESPONSE}`,
+        `${SORRY_INFROM_RESPONSE} ${clientName} ${DID_NOT_ACCEPT_OFFER_RESPONSE}: ${jobTitle}. ${LOGIN_DASHBOARD_TO_SEE_DETAILS_RESPONSE}`,
+        clientName,
+        jobTitle,
+        jobId
       );
       await CommunicationModel.findByIdAndUpdate(
         existCommunication?._id,
@@ -804,7 +815,7 @@ async function createOffer(req, res) {
         time: new Date().getTime(),
       };
 
-      await sendEmailNotification(
+      await sendSellerEmailNotification(
         existSeller.username,
         existSeller.email,
         `${YOU_HAVE_RECIVE_RESPONSE} ${existClient?.username}`,
@@ -815,7 +826,9 @@ async function createOffer(req, res) {
         }<br> ${CLIENT_EMAIL_RESPONSE}: ${existClient?.email} <br> ${
           message && `${MESSAGE_RESPONSE}: ${message}`
         }`,
-        existClient?.username
+        existClient?.username,
+        jobId,
+        existJob.jobTitle
       );
       await CommunicationModel.findByIdAndUpdate(
         existCommunication?._id,
@@ -889,7 +902,7 @@ async function sendBidEmail(
           <strong style="font-size: 16px;">${OFFER_NOTE_RESPONSE}: </strong>
           <p style="font-size: 14px; color: #555;">${offerNote}</p>
         </div>
-        <p style="font-size: 14px; color: #777;">${LOGIN_TO_REPLY_MESSAGE_RESPONSE}</p>
+        <p style="font-size: 14px; color: #777;">${LOGIN_TO_REPLY_MESSAGE_RESPONSE} klicken Sie hier: <a href="${corsUrl}/client-dashboard" style="font-weight: bold;">klicken Sie hier</a></p>
         <p style="font-size: 14px; color: #4285F4;"><a href="${corsUrl}">${NAME_RESPONSE}</a></p>
         <p style="font-size: 14px; color: #4285F4;">E-mail: ${supportMail}</p>
         <p style="font-size: 14px; color: #777;">Tel: ${supportPhone}</p>
@@ -1036,7 +1049,7 @@ async function updateBidEmail(
           <strong style="font-size: 16px;">${OFFER_NOTE_RESPONSE}: </strong>
           <p style="font-size: 14px; color: #555;">${offerNote}</p>
         </div>
-        <p style="font-size: 14px; color: #777;">${LOGIN_TO_REPLY_MESSAGE_RESPONSE}</p>
+        <p style="font-size: 14px; color: #777;">${LOGIN_TO_REPLY_MESSAGE_RESPONSE}, klicken Sie hier: <a href="${corsUrl}/client-dashboard" style="font-weight: bold;">${corsUrl}/client-dashboard</a></p>
         <p style="font-size: 14px; color: #4285F4;"><a href="${corsUrl}">${NAME_RESPONSE}</a></p>
         <p style="font-size: 14px; color: #4285F4;">E-mail: ${supportMail}</p>
         <p style="font-size: 14px; color: #777;">Tel: ${supportPhone}</p>
@@ -1061,22 +1074,22 @@ async function offerReviewRequest(req, res) {
     let existOffer = await OfferModel.findOne({ _id: id });
     const { jobId, sellerId } = existOffer || {};
     const existSeller = await SellerModel.findOne({ _id: sellerId });
-    const { username } = existSeller || {};
+    const { username: sellerName } = existSeller || {};
     const existJob = await JobModel.findOne({ _id: jobId });
     const { jobTitle, jobEmail } = existJob || {};
     const existClient = await ClientModel.findOne({ email: jobEmail });
-    const { firstname, email } = existClient || {};
+    const { username: clientName, email } = existClient || {};
     if (existOffer) {
       let updateData = {
         reviewRequest: true,
       };
       await OfferModel.findByIdAndUpdate(id, updateData, { new: true });
-      await sendEmailNotification(
-        firstname,
+      await sendClientEmailNotification(
+        clientName,
         email,
-        `${username} ${SEND_REVIEW_REQUEST_RESPONSE}`,
-        `${username} ${ASK_TO_ADD_REVIEW_RESPONSE}. ${LOGIN_DASHBOARD_TO_WRITE_REVIEW_RESPONSE}  <p style="font-weigth: bold; font-size: 14px; color: #555;">${JOB_TITLE_RESPONSE}: ${jobTitle}</p>`,
-        username
+        `${sellerName} ${SEND_REVIEW_REQUEST_RESPONSE}`,
+        `${sellerName} ${ASK_TO_ADD_REVIEW_RESPONSE}. ${LOGIN_DASHBOARD_TO_WRITE_REVIEW_RESPONSE}  <p style="font-weigth: bold; font-size: 14px; color: #555;">${JOB_TITLE_RESPONSE}: ${jobTitle}</p>`,
+        sellerName
       );
       res.status(200).json({ message: REVIEW_REQUEST_SEND_MESSAGE });
     } else {
@@ -1106,8 +1119,8 @@ async function offerArchiveRequest(req, res) {
   }
 }
 
-// send notification email
-async function sendEmailNotification(
+// send client email
+async function sendClientEmailNotification(
   name,
   email,
   subject,
@@ -1142,7 +1155,63 @@ async function sendEmailNotification(
           <strong style="font-size: 16px;">${MESSAGE_RESPONSE}:</strong>
           <p style="font-size: 14px; color: #555;">${message}</p>
         </div>
-        <p style="font-size: 14px; color: #777;">${LOGIN_TO_REPLY_MESSAGE_RESPONSE}</p>
+        <p style="font-size: 14px; color: #777;">${LOGIN_TO_REPLY_MESSAGE_RESPONSE}, klicken Sie hier: <a href="${corsUrl}/client-dashboard" style="font-weight: bold;">${corsUrl}/client-dashboard</a></p>
+        <p style="font-size: 14px; color: #4285F4;"><a href="${corsUrl}">${NAME_RESPONSE}</a></p>
+        <p style="font-size: 14px; color: #4285F4;">E-mail: ${supportMail}</p>
+        <p style="font-size: 14px; color: #777;">Tel: ${supportPhone}</p>
+      `,
+    },
+  };
+  emailTemplate.body.message = `${message}`;
+  const emailBody = mailGenerator.generate(emailTemplate);
+  const mailOptions = {
+    from: EMAIL,
+    to: email,
+    subject: subject,
+    html: emailBody,
+  };
+  await transporter.sendMail(mailOptions);
+}
+
+// send seller email
+async function sendSellerEmailNotification(
+  name,
+  email,
+  subject,
+  message,
+  receiveName,
+  jobTitle,
+  jobId
+) {
+  let config = {
+    host: SMTP,
+    port: PORT,
+    secure: false,
+    auth: {
+      user: EMAIL,
+      pass: PASSWORD,
+    },
+  };
+  const transporter = nodemailer.createTransport(config);
+  const mailGenerator = new Mailgen({
+    theme: "default",
+    product: {
+      name: NAME_RESPONSE,
+      link: DOMAIN_URL_RESPONSE,
+      copyright: OUTRO_RESPONSE,
+    },
+  });
+  const emailTemplate = {
+    body: {
+      name: `${name}`,
+      intro: `${YOU_HAVE_RECIVE_RESPONSE} ${receiveName}:`,
+      signature: SINGNATURE_RESPONSE,
+      outro: `
+        <div style="border-top: 1px solid #ddd; margin: 20px 0; padding-top: 10px;">
+          <strong style="font-size: 16px;">${MESSAGE_RESPONSE}:</strong>
+          <p style="font-size: 14px; color: #555;">${message}</p>
+        </div>
+        <p style="font-size: 14px; color: #777; font-weight: bold;">${LOGIN_TO_REPLY_MESSAGE_RESPONSE}, ${jobTitle}: <a style="font-weight: bold;" href="${corsUrl}/search-job/${jobId}">${corsUrl}/search-job/${id}</a></p>
         <p style="font-size: 14px; color: #4285F4;"><a href="${corsUrl}">${NAME_RESPONSE}</a></p>
         <p style="font-size: 14px; color: #4285F4;">E-mail: ${supportMail}</p>
         <p style="font-size: 14px; color: #777;">Tel: ${supportPhone}</p>
@@ -1166,19 +1235,21 @@ async function deleteOffer(req, res) {
   const existOffer = await OfferModel.findById(id);
   const { sellerId, jobId } = existOffer || {};
   const existSeller = await SellerModel.findById(sellerId);
-  const { email, username } = existSeller || {};
+  const { email, username: sellerName } = existSeller || {};
   const existCommunication = await CommunicationModel.findOne({
     jobId: jobId,
     sellerId: sellerId,
   });
   const existJob = await JobModel.findOne({ _id: jobId });
-  const { _id, placeBid } = existJob || {};
+  const { _id, placeBid, jobTitle } = existJob || {};
   try {
     await sendDeleteEmail(
-      username,
+      sellerName,
       email,
       `${OFFER_HAS_DELETE_RESPONSE}`,
-      "Suisse Offerten Team"
+      "Suisse Offerten Team",
+      jobTitle,
+      _id
     );
     const updateJob = {
       placeBid: placeBid > 0 ? placeBid - 1 : 0,
@@ -1193,7 +1264,14 @@ async function deleteOffer(req, res) {
 }
 
 // send notification email
-async function sendDeleteEmail(name, email, subject, receiveName) {
+async function sendDeleteEmail(
+  name,
+  email,
+  subject,
+  receiveName,
+  jobTitle,
+  jobId
+) {
   let config = {
     host: SMTP,
     port: PORT,
@@ -1222,7 +1300,7 @@ async function sendDeleteEmail(name, email, subject, receiveName) {
           <strong style="font-size: 16px;">${MESSAGE_RESPONSE}:</strong>
           <p style="font-size: 14px; color: #555;">${OFFER_VAILATION_ERROR_RESPONSE}</p>
         </div>
-        <p style="font-size: 14px; color: #777;">${HAVE_QUESTION_ASK_CONTACT_RESPONSE}</p>
+        <p style="font-size: 14px; color: #777; font-weigth: bold;">${HAVE_QUESTION_ASK_CONTACT_RESPONSE} ${jobTitle}: <a style="font-weight: bold;" href="${corsUrl}/search-job/${jobId}">${corsUrl}/search-job/${id}</a></p>
         <p style="font-size: 14px; color: #4285F4;"><a href="${corsUrl}">${NAME_RESPONSE}</a></p>
         <p style="font-size: 14px; color: #4285F4;">E-mail: ${supportMail}</p>
         <p style="font-size: 14px; color: #777;">Tel: ${supportPhone}</p>

@@ -152,6 +152,10 @@ async function createCreditsPayment(req, res) {
       ],
       mode: "payment",
       invoice_creation: { enabled: true },
+      customer_update: {
+        address: "auto",
+      },
+      automatic_tax: { enabled: true },
       success_url: successUrl,
       cancel_url: failedUrl,
       metadata: {

@@ -239,7 +239,9 @@ async function createReview(req, res) {
       existSeller.email,
       `${YOU_HAVE_GET_RESPONSE} ${rating} ${START_REVIEW_FROM_RESPONSE} ${clinetName}`,
       `${REVIEW_CREATOR_RESPONSE}: ${clinetName}<br> ${REVIEW_RESPONSE}: ${review} <br> ${REVIEW_RATING_RESPONSE}: ${rating}`,
-      clinetName
+      clinetName,
+      jobTitle,
+      jobid
     );
     const updateStatus = {
       reviewSubmited: "complete",
@@ -259,7 +261,9 @@ async function sendEmailNotification(
   email,
   subject,
   message,
-  receiveName
+  receiveName,
+  jobTitle,
+  jobId
 ) {
   let config = {
     host: SMTP,
@@ -290,7 +294,7 @@ async function sendEmailNotification(
           <strong style="font-size: 16px;">${MESSAGE_RESPONSE}:</strong>
           <p style="font-size: 14px; color: #555;">${message}</p>
         </div>
-        <p style="font-size: 14px; color: #777;">${LOGIN_DASHBOARD_TO_SEE_REVIEW_RESPONSE}</p>
+        <p style="font-size: 14px; color: #777; font-weight: bold;">${LOGIN_DASHBOARD_TO_SEE_REVIEW_RESPONSE}, ${jobTitle}: <a style="font-weight: bold;" href="${corsUrl}/search-job/${jobId}">${corsUrl}/search-job/${id}</a></p>
         <p style="font-size: 14px; color: #4285F4;"><a href="${corsUrl}">${NAME_RESPONSE}</a></p>
         <p style="font-size: 14px; color: #4285F4;">E-mail: ${supportMail}</p>
         <p style="font-size: 14px; color: #777;">Tel: ${supportPhone}</p>

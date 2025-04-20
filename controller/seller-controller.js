@@ -252,7 +252,7 @@ async function sendVerificationEmail(companyName, email, token) {
           link: `${baseURL}/verify-email/${token}`,
         },
       },
-      outro: `<p style="font-size: 14px; color: #777;">${PLEASE_LOGIN_TO_SEE_PROCESS_RESPONSE}</p>
+      outro: `<p style="font-size: 14px; color: #777;">${PLEASE_LOGIN_TO_SEE_PROCESS_RESPONSE}, Armaturenbrett: <a href="${corsUrl}/seller-dashboard" style="font-weight: bold;">${corsUrl}/seller-dashboard</a></p>
         <p style="font-size: 14px; color: #4285F4;"><a href="${corsUrl}">${NAME_RESPONSE}</a></p>
         <p style="font-size: 14px; color: #4285F4;">E-mail: ${supportMail}</p>
         <p style="font-size: 14px; color: #777;">Tel: ${supportPhone}</p>`,
@@ -689,7 +689,7 @@ async function sendEmailNotification(name, email, subject, verify) {
           <strong style="font-size: 16px;">${MESSAGE_RESPONSE}:</strong>
           <p style="font-size: 14px; color: #555;">${verify} ${IS_VERIFYED_RESPONSE}</p>
         </div>
-        <p style="font-size: 14px; color: #777;">${PLEASE_LOGIN_TO_SEE_PROCESS_RESPONSE}</p>
+        <p style="font-size: 14px; color: #777;">${PLEASE_LOGIN_TO_SEE_PROCESS_RESPONSE}, Armaturenbrett: <a href="${corsUrl}/seller-dashboard" style="font-weight: bold;">${corsUrl}/seller-dashboard</a></p>
         <p style="font-size: 14px; color: #4285F4;"><a href="${corsUrl}">${NAME_RESPONSE}</a></p>
         <p style="font-size: 14px; color: #4285F4;">E-mail: ${supportMail}</p>
         <p style="font-size: 14px; color: #777;">Tel: ${supportPhone}</p>
@@ -1040,7 +1040,7 @@ async function sendResetPasswordLink(req, res) {
               },
             ],
           },
-          outro: `<p style="font-size: 14px; color: #777;">${GET_RESET_PASSWORD_LINK_RESPONSE}</p>
+          outro: `<p style="font-size: 14px; color: #777;">${GET_RESET_PASSWORD_LINK_RESPONSE}, <a href="${corsUrl}/seller-dashboard" style="font-weight: bold;">Armaturenbrett</a></p>
         <p style="font-size: 14px; color: #4285F4;"><a href="${corsUrl}">${NAME_RESPONSE}</a></p>
         <p style="font-size: 14px; color: #4285F4;">E-mail: ${supportMail}</p>
         <p style="font-size: 14px; color: #777;">Tel: ${supportPhone}</p>`,

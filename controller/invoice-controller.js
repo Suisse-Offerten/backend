@@ -1,6 +1,7 @@
 const {
   SERVER_ERROR_MESSAGE,
   DATA_NOT_FOUND_MESSAGE,
+  QUERY_SUCCESS_FULL_MESSAGE,
 } = require("../utils/response");
 
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
@@ -14,14 +15,21 @@ async function getAllInvoice(req, res) {
       email: email,
       limit: 1,
     });
-    const customerId = customers.data[0].id;
-    const invoices = await stripe.invoices.list({
-      customer: customerId,
-      limit: limitNumber,
-    });
-    res.status(200).json(invoices);
+    let invoices;
+    if (customers?.data?.length === 0) {
+      invoices = [];
+    } else {
+      const customerId = customers.data[0].id;
+      invoices = await stripe.invoices.list({
+        customer: customerId,
+        limit: limitNumber,
+      });
+    }
+    res
+      .status(200)
+      .json({ message: QUERY_SUCCESS_FULL_MESSAGE, invoices: invoices });
   } catch (error) {
-    return res.status(500).json({ message: SERVER_ERROR_MESSAGE, error });
+    res.status(500).json({ message: SERVER_ERROR_MESSAGE, error });
   }
 }
 

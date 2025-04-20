@@ -140,7 +140,9 @@ const createCommunication = async (req, res) => {
             existClient.email,
             `${YOU_HAVE_RECIVE_RESPONSE} ${existSeller.username}`,
             sellerMessage,
-            existSeller.username
+            existSeller.username,
+            existJob?.jobTitle,
+            jobId
           );
         }
       } else if (clientMessage) {
@@ -151,7 +153,9 @@ const createCommunication = async (req, res) => {
             existSeller.email,
             `${YOU_HAVE_RECIVE_RESPONSE} ${existClient.username}`,
             clientMessage,
-            existClient.username
+            existClient.username,
+            existJob?.jobTitle,
+            jobId
           );
         }
       }
@@ -193,6 +197,8 @@ const updateCommunication = async (req, res) => {
     let existCommunication = await CommunicationModel.findById(id);
     const sellerId = existCommunication?.sellerId;
     const clientId = existCommunication?.clientId;
+    const jobId = existCommunication?.jobId;
+    const existJob = await JobModel.findOne({ _id: jobId });
     const existSeller = await SellerModel.findOne({ _id: sellerId });
     const existClient = await ClientModel.findOne({ _id: clientId });
     if (sellerMessage) {
@@ -202,7 +208,9 @@ const updateCommunication = async (req, res) => {
           existClient.email,
           `${YOU_HAVE_RECIVE_RESPONSE} ${existSeller.username}`,
           sellerMessage,
-          existSeller.username
+          existSeller.username,
+          existJob?.jobTitle,
+          jobId
         );
       }
     } else if (clientMessage) {
@@ -212,7 +220,9 @@ const updateCommunication = async (req, res) => {
           existSeller.email,
           `${YOU_HAVE_RECIVE_RESPONSE} ${existClient.username}`,
           clientMessage,
-          existClient.username
+          existClient.username,
+          existJob?.jobTitle,
+          jobId
         );
       }
     }
@@ -256,7 +266,9 @@ async function sendEmailNotification(
   email,
   subject,
   message,
-  receiveName
+  receiveName,
+  jobTitle,
+  id
 ) {
   let config = {
     host: SMTP,
@@ -286,7 +298,7 @@ async function sendEmailNotification(
           <strong style="font-size: 16px;">${MESSAGE_RESPONSE}:</strong>
           <p style="font-size: 14px; color: #555;">${message}</p>
         </div>
-        <p style="font-size: 14px; color: #777;">${LOGIN_TO_REPLY_MESSAGE_RESPONSE}</p>
+        <p style="font-size: 14px; color: #777; font-weight: bold;">${LOGIN_TO_REPLY_MESSAGE_RESPONSE}, ${jobTitle}: <a style="font-weight: bold;" href="${corsUrl}/search-job/${id}">${corsUrl}/search-job/${id}</a></p>
         <p style="font-size: 14px; color: #4285F4;"><a href="${corsUrl}">${NAME_RESPONSE}</a></p>
         <p style="font-size: 14px; color: #4285F4;">E-mail: ${supportMail}</p>
         <p style="font-size: 14px; color: #777;">Tel: ${supportPhone}</p>

@@ -157,7 +157,7 @@ async function sendEmailNotification(name, email, message) {
           <strong style="font-size: 16px;">${MESSAGE_RESPONSE}:</strong>
           <p style="font-size: 14px; color: #555;">${message}</p>
         </div>
-        <p style="font-size: 14px; color: #777;">${LOGIN_TO_REPLY_MESSAGE_RESPONSE}</p>
+        <p style="font-size: 14px; color: #777;">${LOGIN_TO_REPLY_MESSAGE_RESPONSE}, Armaturenbrett: <a href="${corsUrl}/seller-dashboard" style="font-weight: bold;">${corsUrl}/seller-dashboard</a></p>
         <p style="font-size: 14px; color: #4285F4;"><a href="${corsUrl}">${NAME_RESPONSE}</a></p>
         <p style="font-size: 14px; color: #4285F4;">E-mail: ${supportMail}</p>
         <p style="font-size: 14px; color: #777;">Tel: ${supportPhone}</p>

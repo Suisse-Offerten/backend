@@ -124,7 +124,7 @@ const emailResponse = {
   IS_VERIFYED_RESPONSE: "ist verifiziert.",
   GET_NOT_RESET_EMAIL_RESPONSE:
     "Wenn Sie sich nicht mehr an Ihr Passwort erinnern und Sie keine E-Mail zum Zurücksetzen des Passworts erhalten haben, können Sie hier Ihr Passwort zurückzusetzen.",
-  SINGNATURE_RESPONSE: "Ihr wahrhaft",
+  SINGNATURE_RESPONSE: "Freundliche Grüsse",
   OUTRO_RESPONSE: "©2025 Suisse-Offerten. Alle Rechte vorbehalten.",
   PAYMENT_SUBJECT_RESPONSE: "Sie haben ein Update erhalten",
 };

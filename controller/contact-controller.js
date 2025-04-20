@@ -158,7 +158,7 @@ async function createContact(req, res) {
         pass: PASSWORD,
       },
     };
-    let transport = nodemailer.createTransport(config);
+    const transporter = nodemailer.createTransport(config);
     let mailGenarator = new Mailgen({
       theme: "default",
       product: {
@@ -206,14 +206,15 @@ async function createContact(req, res) {
     };
     let mail = await mailGenarator.generate(response);
     let message = {
-      from: email,
+      from: EMAIL,
       to: EMAIL,
+      replyTo: email,
       subject: GET_MESSAGE_FROM_CONTACT_PAGE_RESPONSE,
       html: mail,
     };
 
     await newMessage.save();
-    transport.sendMail(message).then(() => {
+    transporter.sendMail(message).then(() => {
       return res
         .status(201)
         .json({ newMessage, message: MESSAGE_SEND_MESSAGE });
