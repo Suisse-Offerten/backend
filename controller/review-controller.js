@@ -217,7 +217,7 @@ async function createReview(req, res) {
       status: "pending",
       sellerName: existSeller?.username,
     });
-    await reviewData.save();
+
     const existReview = await ReviewModel.find({ sellerId });
     const sumOfRating = existReview.reduce(
       (acc, item) => acc + (item.rating || 0),
@@ -240,13 +240,13 @@ async function createReview(req, res) {
       `${YOU_HAVE_GET_RESPONSE} ${rating} ${START_REVIEW_FROM_RESPONSE} ${clinetName}`,
       `${REVIEW_CREATOR_RESPONSE}: ${clinetName}<br> ${REVIEW_RESPONSE}: ${review} <br> ${REVIEW_RATING_RESPONSE}: ${rating}`,
       clinetName,
-      jobTitle,
-      jobid
+      existJob?.jobTitle,
+      jobId
     );
     const updateStatus = {
       reviewSubmited: "complete",
     };
-
+    await reviewData.save();
     await SellerModel.findByIdAndUpdate(sellerId, updateSeller, { new: true });
     await OfferModel.findByIdAndUpdate(offerId, updateStatus, { new: true });
     res.status(200).json({ message: REVIEW_SUBMIT_SUCCESS_MESSAGE });
@@ -294,7 +294,7 @@ async function sendEmailNotification(
           <strong style="font-size: 16px;">${MESSAGE_RESPONSE}:</strong>
           <p style="font-size: 14px; color: #555;">${message}</p>
         </div>
-        <p style="font-size: 14px; color: #777; font-weight: bold;">${LOGIN_DASHBOARD_TO_SEE_REVIEW_RESPONSE}, ${jobTitle}: <a style="font-weight: bold;" href="${corsUrl}/search-job/${jobId}">${corsUrl}/search-job/${id}</a></p>
+        <p style="font-size: 14px; color: #777; font-weight: bold;">${LOGIN_DASHBOARD_TO_SEE_REVIEW_RESPONSE}, ${jobTitle}: <a style="font-weight: bold;" href="${corsUrl}/search-job/${jobId}">${corsUrl}/search-job/${jobId}</a></p>
         <p style="font-size: 14px; color: #4285F4;"><a href="${corsUrl}">${NAME_RESPONSE}</a></p>
         <p style="font-size: 14px; color: #4285F4;">E-mail: ${supportMail}</p>
         <p style="font-size: 14px; color: #777;">Tel: ${supportPhone}</p>

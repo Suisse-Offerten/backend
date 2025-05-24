@@ -24,6 +24,7 @@ const {
   sendResetPasswordLink,
   updateSellerCredits,
   updateSellerActivityByAdmin,
+  freeTirelMembership,
 } = require("../controller/seller-controller");
 const auth = require("../middlewares/auth");
 const userFiles = require("../middlewares/companyImages");
@@ -41,6 +42,7 @@ router.post("/login", login);
 router.post("/otp", otpSend);
 router.post("/otp/check", otpCheck);
 router.patch("/change/password/:id", auth, changePasswordBySeller);
+router.patch("/freetirel/:id", auth, freeTirelMembership);
 router.patch("/update/:id", auth, deleteSellerCompanyPictures);
 router.patch("/upload/:id", auth, addressFile, uploadSellerAddress);
 router.patch("/update/credits/:id", auth, addressFile, updateSellerCredits);

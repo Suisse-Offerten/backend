@@ -49,13 +49,13 @@ const {
   NEW_NOTIFICATION_RESPONSE,
   GOOD_NEWS_RESPONSE,
   MESSAGE_RESPONSE,
-  IS_VERIFYED_RESPONSE,
   CHANGE_PASSWORD_RESPONSE,
   GET_NOT_RESET_EMAIL_RESPONSE,
   GET_RESET_PASSWORD_LINK_RESPONSE,
   CHANGE_PASSWORD_LINK_RESPONSE,
   OUTRO_RESPONSE,
   SINGNATURE_RESPONSE,
+  LOGIN_TO_REPLY_MESSAGE_RESPONSE,
 } = require("../utils/email.response");
 const supportMail = process.env.SUPPORT_MAIL;
 const supportPhone = process.env.SUPPORT_PHONE;
@@ -248,7 +248,7 @@ async function sendVerificationEmail(companyName, email, token) {
         instructions: CLICK_TO_VERIFY_RESPONSE,
         button: {
           color: "#22BC66",
-          text: "Verify Email",
+          text: "E-Mail bestätigen.",
           link: `${baseURL}/verify-email/${token}`,
         },
       },
@@ -472,6 +472,30 @@ async function changePassword(req, res) {
   }
 }
 
+// free tirel activated
+async function freeTirelMembership(req, res) {
+  const { id } = req.params;
+
+  const existSeller = await SellerModel.findOne({
+    _id: id,
+  });
+  if (!existSeller) {
+    return res.status(404).json({ message: DATA_NOT_FOUND_MESSAGE });
+  }
+
+  const membershipData = {
+    credits: existSeller?.credits + 20,
+    freeTire: true,
+  };
+  await sendFreeTirelEmail(
+    existSeller?.username,
+    existSeller?.email,
+    "Sie haben eine kostenlose Testversion aktiviert und 20 Credits erhalten. Jetzt können Sie auf jeden Job bieten."
+  );
+  await SellerModel.findByIdAndUpdate(id, membershipData, { new: true });
+  res.status(200).json({ message: "Gratis-Reifen aktiviert" });
+}
+
 // change password by seller
 async function changePasswordBySeller(req, res) {
   const { password } = req.body;
@@ -687,7 +711,7 @@ async function sendEmailNotification(name, email, subject, verify) {
       outro: `
         <div style="border-top: 1px solid #ddd; margin: 20px 0; padding-top: 10px;">
           <strong style="font-size: 16px;">${MESSAGE_RESPONSE}:</strong>
-          <p style="font-size: 14px; color: #555;">${verify} ${IS_VERIFYED_RESPONSE}</p>
+          <p style="font-size: 14px; color: #555;">Ihre ${verify} wurde verifiziert</p>
         </div>
         <p style="font-size: 14px; color: #777;">${PLEASE_LOGIN_TO_SEE_PROCESS_RESPONSE}, Armaturenbrett: <a href="${corsUrl}/seller-dashboard" style="font-weight: bold;">${corsUrl}/seller-dashboard</a></p>
         <p style="font-size: 14px; color: #4285F4;"><a href="${corsUrl}">${NAME_RESPONSE}</a></p>
@@ -778,10 +802,10 @@ async function updateSellerByAdmin(req, res) {
       return res.status(400).json({ message: DATA_NOT_FOUND_MESSAGE });
     }
     const basePath = `${req.protocol}://${req.get("host")}/uploads/`;
-    const companyLogo = req.files?.companyLogo?.[0]?.originalname
+    const companyLogo = req.files?.companyLogo?.[0]?.filename
       ?.split(" ")
       .join("-");
-    const companyCover = req.files?.companyCover?.[0]?.originalname
+    const companyCover = req.files?.companyCover?.[0]?.filename
       ?.split(" ")
       .join("-");
 
@@ -818,7 +842,7 @@ async function updateSellerByAdmin(req, res) {
     };
     if (req.files?.companyPictures && req.files.companyPictures.length > 0) {
       updateSeller.companyPictures = req.files.companyPictures.map(
-        (file) => `${basePath}${file.originalname.split(" ").join("-")}`
+        (file) => `${basePath}${file.filename}`
       );
     }
     await SellerModel.findByIdAndUpdate(id, updateSeller, { new: true });
@@ -987,7 +1011,7 @@ async function uploadSellerAddress(req, res) {
     const existSeller = await SellerModel.findOne({ _id: id });
     if (existSeller) {
       const basePath = `${req.protocol}://${req.get("host")}/uploads/`;
-      const file = req?.file?.originalname.split(" ").join("-");
+      const file = req?.file?.filename;
       const updateData = {
         postalCode,
         streetNo,
@@ -1068,6 +1092,55 @@ async function sendResetPasswordLink(req, res) {
   }
 }
 
+// send mail notification
+async function sendFreeTirelEmail(name, email, message) {
+  let config = {
+    host: SMTP,
+    port: PORT,
+    secure: false,
+    auth: {
+      user: EMAIL,
+      pass: PASSWORD,
+    },
+  };
+
+  const transporter = nodemailer.createTransport(config);
+  const mailGenerator = new Mailgen({
+    theme: "default",
+    product: {
+      name: NAME_RESPONSE,
+      link: DOMAIN_URL_RESPONSE,
+      copyright: OUTRO_RESPONSE,
+    },
+  });
+  const emailTemplate = {
+    body: {
+      name: `${name}`,
+      intro: "Sie haben eine kostenlose Testversion aktiviert",
+      signature: SINGNATURE_RESPONSE,
+      outro: `
+        <div style="border-top: 1px solid #ddd; margin: 20px 0; padding-top: 10px;">
+          <strong style="font-size: 16px;">${MESSAGE_RESPONSE}:</strong>
+          <p style="font-size: 14px; color: #555;">${message}</p>
+        </div>
+        <p style="font-size: 14px; color: #777;">${LOGIN_TO_REPLY_MESSAGE_RESPONSE}</p>
+        <p style="font-size: 14px; color: #4285F4;"><a href="${corsUrl}">${NAME_RESPONSE}</a></p>
+        <p style="font-size: 14px; color: #4285F4;">E-mail: ${supportMail}</p>
+        <p style="font-size: 14px; color: #777;">Tel: ${supportPhone}</p>
+      `,
+    },
+  };
+  emailTemplate.body.message = `${message}`;
+  const emailBody = mailGenerator.generate(emailTemplate);
+  const mailOptions = {
+    from: EMAIL,
+    to: email,
+    subject: "Sie haben eine kostenlose Testversion aktiviert",
+    html: emailBody,
+  };
+  await transporter.sendMail(mailOptions);
+}
+
 module.exports = {
   getAllSeller,
   getOneSeller,
@@ -1092,4 +1165,5 @@ module.exports = {
   sendResetPasswordLink,
   updateSellerCredits,
   updateSellerActivityByAdmin,
+  freeTirelMembership,
 };

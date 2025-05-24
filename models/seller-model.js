@@ -171,6 +171,9 @@ const sellerSchema = mongoose.Schema(
     extendMembership: {
       type: Object,
     },
+    freeTire: {
+      type: Boolean,
+    },
   },
   { timestamps: true }
 );

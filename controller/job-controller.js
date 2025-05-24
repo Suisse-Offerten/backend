@@ -279,9 +279,9 @@ async function createJob(req, res) {
     }
     let file = [];
     const basePath = `${req.protocol}://${req.get("host")}/uploads/`;
-    for (let i = 0; i < req?.files.length; i++) {
-      const path = req?.files[i]?.originalname.split(" ").join("-");
-      file.push(`${basePath}${path}`);
+    for (let i = 0; i < req.files.length; i++) {
+      const savedFileName = req.files[i].filename;
+      file.push(`${basePath}${savedFileName}`);
     }
     const generatedNumbers = new Set();
     const generateNum = (min, max) => {

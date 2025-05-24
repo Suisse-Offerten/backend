@@ -592,7 +592,7 @@ async function sendBidRequest(req, res) {
     } else if (existOffer.offerPlaced) {
       return res.status(400).json({ message: ALREADY_SEND_BID_MESSAGE });
     } else {
-      const file = req?.file?.originalname.split(" ").join("-");
+      const file = req?.file?.filename;
       const basePath = `${req.protocol}://${req.get("host")}/uploads/`;
       const offerFiles = file ? `${basePath}${file}` : null;
       if (existCommunication) {
@@ -956,7 +956,7 @@ async function updateOfferDetails(req, res) {
   });
 
   try {
-    const file = req?.file?.originalname.split(" ").join("-");
+    const file = req?.file?.filename;
     const basePath = `${req.protocol}://${req.get("host")}/uploads/`;
     const offerFiles = file ? `${basePath}${file}` : null;
     const updateOffer = {
@@ -1211,7 +1211,7 @@ async function sendSellerEmailNotification(
           <strong style="font-size: 16px;">${MESSAGE_RESPONSE}:</strong>
           <p style="font-size: 14px; color: #555;">${message}</p>
         </div>
-        <p style="font-size: 14px; color: #777; font-weight: bold;">${LOGIN_TO_REPLY_MESSAGE_RESPONSE}, ${jobTitle}: <a style="font-weight: bold;" href="${corsUrl}/search-job/${jobId}">${corsUrl}/search-job/${id}</a></p>
+        <p style="font-size: 14px; color: #777; font-weight: bold;">${LOGIN_TO_REPLY_MESSAGE_RESPONSE}, ${jobTitle}: <a style="font-weight: bold;" href="${corsUrl}/search-job/${jobId}">${corsUrl}/search-job/${jobId}</a></p>
         <p style="font-size: 14px; color: #4285F4;"><a href="${corsUrl}">${NAME_RESPONSE}</a></p>
         <p style="font-size: 14px; color: #4285F4;">E-mail: ${supportMail}</p>
         <p style="font-size: 14px; color: #777;">Tel: ${supportPhone}</p>
@@ -1300,7 +1300,7 @@ async function sendDeleteEmail(
           <strong style="font-size: 16px;">${MESSAGE_RESPONSE}:</strong>
           <p style="font-size: 14px; color: #555;">${OFFER_VAILATION_ERROR_RESPONSE}</p>
         </div>
-        <p style="font-size: 14px; color: #777; font-weigth: bold;">${HAVE_QUESTION_ASK_CONTACT_RESPONSE} ${jobTitle}: <a style="font-weight: bold;" href="${corsUrl}/search-job/${jobId}">${corsUrl}/search-job/${id}</a></p>
+        <p style="font-size: 14px; color: #777; font-weigth: bold;">${HAVE_QUESTION_ASK_CONTACT_RESPONSE} ${jobTitle}: <a style="font-weight: bold;" href="${corsUrl}/search-job/${jobId}">${corsUrl}/search-job/${jobId}</a></p>
         <p style="font-size: 14px; color: #4285F4;"><a href="${corsUrl}">${NAME_RESPONSE}</a></p>
         <p style="font-size: 14px; color: #4285F4;">E-mail: ${supportMail}</p>
         <p style="font-size: 14px; color: #777;">Tel: ${supportPhone}</p>
