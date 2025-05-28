@@ -115,11 +115,6 @@ async function creditWebhook(req, res) {
       await SellerModel.findByIdAndUpdate(sellerId, creditFailed, {
         new: true,
       });
-      await sendEmailNotification(
-        username,
-        email,
-        "Der Guthabenkauf ist fehlgeschlagen. Bitte überprüfen Sie Ihr Dashboard, um Ihre letzte Aktualisierung anzuzeigen."
-      );
     }
     res.status(200).json({ received: true });
   } catch (error) {
