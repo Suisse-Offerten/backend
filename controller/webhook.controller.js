@@ -51,6 +51,7 @@ async function membershipWebhook(req, res) {
           extendCredit: 0,
           extendTime: 0,
           extendMembership: {},
+          memberShipStatus: "Active",
         };
       } else {
         membershipComplete = {
