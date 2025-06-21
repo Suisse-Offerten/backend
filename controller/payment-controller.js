@@ -77,6 +77,7 @@ async function createMembershipPayment(req, res) {
       payment_method_types: ["card"],
       mode: "subscription",
       customer: customer.id,
+      billing_address_collection: "required",
       line_items: [{ price: priceId, quantity: 1 }],
       success_url: successUrl,
       cancel_url: failedUrl,
@@ -137,6 +138,7 @@ async function createCreditsPayment(req, res) {
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ["card", "twint"],
       customer: customer.id,
+      billing_address_collection: "required",
       line_items: [
         {
           price_data: {
@@ -144,6 +146,7 @@ async function createCreditsPayment(req, res) {
             product_data: {
               name: `${credits} Credits`,
               description: `Sie kaufen ${credits} Gutschriften für CHF ${price}.`,
+              tax_code: "txcd_20030000",
             },
             unit_amount: price * 100, // Ensure price is in cents
           },

@@ -200,7 +200,6 @@ async function createContact(req, res) {
         </div>
         <p style="font-size: 14px; color: #4285F4;"><a href="${corsUrl}">${NAME_RESPONSE}</a></p>
         <p style="font-size: 14px; color: #4285F4;">E-mail: ${supportMail}</p>
-        <p style="font-size: 14px; color: #777;">Tel: ${supportPhone}</p>
       `,
       },
     };

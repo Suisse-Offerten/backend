@@ -224,7 +224,6 @@ async function sendVerificationCode(companyName, email) {
         <p style="font-size: 14px; color: #777;">${GET_VERIFICATION_CODE_RESPONSE}</p>
         <p style="font-size: 14px; color: #4285F4;"><a href="${corsUrl}">${NAME_RESPONSE}</a></p>
         <p style="font-size: 14px; color: #4285F4;">E-mail: ${supportMail}</p>
-        <p style="font-size: 14px; color: #777;">Tel: ${supportPhone}</p>
       `,
     },
   };
@@ -344,7 +343,6 @@ async function sendJobEmails(
         <p style="font-size: 14px; color: #777;">Visit this link to see recent jobs <a href="${corsUrl}/search-job">${SEE_JOBS_RESPONSE}</a></p>
         <p style="font-size: 14px; color: #4285F4;"><a href="${corsUrl}">${NAME_RESPONSE}</a></p>
         <p style="font-size: 14px; color: #4285F4;">E-mail: ${supportMail}</p>
-        <p style="font-size: 14px; color: #777;">Tel: ${supportPhone}</p>
       `,
       },
     };
@@ -470,8 +468,7 @@ async function otpSend(req, res) {
           },
           outro: `<p style="font-size: 14px; color: #777;">${USE_OTP_TO_CHANGE_PASSWORD_RESPONSE}</p>
         <p style="font-size: 14px; color: #4285F4;"><a href="${corsUrl}">${NAME_RESPONSE}</a></p>
-        <p style="font-size: 14px; color: #4285F4;">E-mail: ${supportMail}</p>
-        <p style="font-size: 14px; color: #777;">Tel: ${supportPhone}</p>`,
+        <p style="font-size: 14px; color: #4285F4;">E-mail: ${supportMail}</p>`,
         },
       };
       let mail = await mailGenarator.generate(response);
@@ -730,8 +727,7 @@ async function sendResetPasswordLink(req, res) {
           },
           outro: `<p style="font-size: 14px; color: #777;">${GET_RESET_PASSWORD_LINK_RESPONSE}</p>
         <p style="font-size: 14px; color: #4285F4;"><a href="${corsUrl}">${NAME_RESPONSE}</a></p>
-        <p style="font-size: 14px; color: #4285F4;">E-mail: ${supportMail}</p>
-        <p style="font-size: 14px; color: #777;">Tel: ${supportPhone}</p>`,
+        <p style="font-size: 14px; color: #4285F4;">E-mail: ${supportMail}</p>`,
         },
       };
       let mail = await mailGenarator.generate(response);

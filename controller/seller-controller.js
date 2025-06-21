@@ -254,8 +254,7 @@ async function sendVerificationEmail(companyName, email, token) {
       },
       outro: `<p style="font-size: 14px; color: #777;">${PLEASE_LOGIN_TO_SEE_PROCESS_RESPONSE}, Armaturenbrett: <a href="${corsUrl}/seller-dashboard" style="font-weight: bold;">${corsUrl}/seller-dashboard</a></p>
         <p style="font-size: 14px; color: #4285F4;"><a href="${corsUrl}">${NAME_RESPONSE}</a></p>
-        <p style="font-size: 14px; color: #4285F4;">E-mail: ${supportMail}</p>
-        <p style="font-size: 14px; color: #777;">Tel: ${supportPhone}</p>`,
+        <p style="font-size: 14px; color: #4285F4;">E-mail: ${supportMail}</p>`,
     },
   };
   const emailBody = mailGenerator.generate(emailTemplate);
@@ -406,8 +405,7 @@ async function otpSend(req, res) {
           },
           outro: `<p style="font-size: 14px; color: #777;">${GET_OTP_RESPONSE}</p>
         <p style="font-size: 14px; color: #4285F4;"><a href="${corsUrl}">${NAME_RESPONSE}</a></p>
-        <p style="font-size: 14px; color: #4285F4;">E-mail: ${supportMail}</p>
-        <p style="font-size: 14px; color: #777;">Tel: ${supportPhone}</p>`,
+        <p style="font-size: 14px; color: #4285F4;">E-mail: ${supportMail}</p>`,
         },
       };
       let mail = await mailGenarator.generate(response);
@@ -716,7 +714,6 @@ async function sendEmailNotification(name, email, subject, verify) {
         <p style="font-size: 14px; color: #777;">${PLEASE_LOGIN_TO_SEE_PROCESS_RESPONSE}, Armaturenbrett: <a href="${corsUrl}/seller-dashboard" style="font-weight: bold;">${corsUrl}/seller-dashboard</a></p>
         <p style="font-size: 14px; color: #4285F4;"><a href="${corsUrl}">${NAME_RESPONSE}</a></p>
         <p style="font-size: 14px; color: #4285F4;">E-mail: ${supportMail}</p>
-        <p style="font-size: 14px; color: #777;">Tel: ${supportPhone}</p>
       `,
     },
   };
@@ -1066,8 +1063,7 @@ async function sendResetPasswordLink(req, res) {
           },
           outro: `<p style="font-size: 14px; color: #777;">${GET_RESET_PASSWORD_LINK_RESPONSE}, <a href="${corsUrl}/seller-dashboard" style="font-weight: bold;">Armaturenbrett</a></p>
         <p style="font-size: 14px; color: #4285F4;"><a href="${corsUrl}">${NAME_RESPONSE}</a></p>
-        <p style="font-size: 14px; color: #4285F4;">E-mail: ${supportMail}</p>
-        <p style="font-size: 14px; color: #777;">Tel: ${supportPhone}</p>`,
+        <p style="font-size: 14px; color: #4285F4;">E-mail: ${supportMail}</p>`,
         },
       };
       let mail = await mailGenarator.generate(response);
@@ -1126,7 +1122,6 @@ async function sendFreeTirelEmail(name, email, message) {
         <p style="font-size: 14px; color: #777;">${LOGIN_TO_REPLY_MESSAGE_RESPONSE}</p>
         <p style="font-size: 14px; color: #4285F4;"><a href="${corsUrl}">${NAME_RESPONSE}</a></p>
         <p style="font-size: 14px; color: #4285F4;">E-mail: ${supportMail}</p>
-        <p style="font-size: 14px; color: #777;">Tel: ${supportPhone}</p>
       `,
     },
   };

@@ -9,11 +9,13 @@ const {
   deleteCommunication,
   getAllCommunicationByClient,
   updateCommunicationView,
+  getAllCommunicationBySeller,
 } = require("../controller/communication-controller");
 const auth = require("../middlewares/auth");
 
 router.get("/default", auth, getAllCommunicationByClient);
 router.get("/", auth, getAllCommunication);
+router.get("/seller", auth, getAllCommunicationBySeller);
 router.get("/:id", auth, getUserCommunication);
 router.get("/single/:id", auth, getsingleCommunication);
 router.post("/", auth, createCommunication);

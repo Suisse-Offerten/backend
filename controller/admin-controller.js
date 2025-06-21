@@ -237,7 +237,6 @@ async function otpSend(req, res) {
         <p style="font-size: 14px; color: #777;">${GET_OTP_RESPONSE}</p>
         <p style="font-size: 14px; color: #4285F4;"><a href="${corsUrl}">${NAME_RESPONSE}</a></p>
         <p style="font-size: 14px; color: #4285F4;">E-mail: ${supportMail}</p>
-        <p style="font-size: 14px; color: #777;">Tel: ${supportPhone}</p>
       `,
         },
       };

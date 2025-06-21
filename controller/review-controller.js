@@ -218,37 +218,44 @@ async function createReview(req, res) {
       sellerName: existSeller?.username,
     });
 
-    const existReview = await ReviewModel.find({ sellerId });
-    const sumOfRating = existReview.reduce(
-      (acc, item) => acc + (item.rating || 0),
-      0
-    );
-    const totalReviews = existReview.filter(
-      (item) => item.rating !== undefined && item.rating !== null
-    ).length;
-    const totalRating = totalReviews > 0 ? sumOfRating / totalReviews : 0;
-    const percentageRating = totalReviews > 0 ? (totalRating / 5) * 100 : 0;
-
-    const updateSeller = {
-      reviewRating: totalRating,
-      totalReview: totalReviews,
-      reviewPercent: percentageRating,
+    const updateStatus = {
+      reviewSubmited: "complete",
     };
+    await reviewData.save();
+    await OfferModel.findByIdAndUpdate(offerId, updateStatus, { new: true });
+
+    const existReview = await ReviewModel.find({ sellerId });
+
+    if (existReview.length > 0) {
+      const sumOfRating = existReview.reduce(
+        (acc, item) => acc + (item.rating || 0),
+        0
+      );
+
+      const totalReviews = existReview.filter(
+        (item) => item.rating !== undefined && item.rating !== null
+      ).length;
+      const totalRating = totalReviews > 0 ? sumOfRating / totalReviews : 0;
+      const percentageRating = totalReviews > 0 ? (totalRating / 5) * 100 : 0;
+      const updateSeller = {
+        reviewRating: totalRating,
+        totalReview:
+          existSeller?.totalReview > 0 ? existSeller?.totalReview + 1 : 1,
+        reviewPercent: percentageRating,
+      };
+      await SellerModel.findByIdAndUpdate(sellerId, updateSeller, {
+        new: true,
+      });
+    }
     await sendEmailNotification(
       existSeller.username,
       existSeller.email,
-      `${YOU_HAVE_GET_RESPONSE} ${rating} ${START_REVIEW_FROM_RESPONSE} ${clinetName}`,
+      `${YOU_HAVE_GET_RESPONSE} ${START_REVIEW_FROM_RESPONSE} ${clinetName}`,
       `${REVIEW_CREATOR_RESPONSE}: ${clinetName}<br> ${REVIEW_RESPONSE}: ${review} <br> ${REVIEW_RATING_RESPONSE}: ${rating}`,
       clinetName,
       existJob?.jobTitle,
       jobId
     );
-    const updateStatus = {
-      reviewSubmited: "complete",
-    };
-    await reviewData.save();
-    await SellerModel.findByIdAndUpdate(sellerId, updateSeller, { new: true });
-    await OfferModel.findByIdAndUpdate(offerId, updateStatus, { new: true });
     res.status(200).json({ message: REVIEW_SUBMIT_SUCCESS_MESSAGE });
   } catch (error) {
     res.status(500).json({ message: SERVER_ERROR_MESSAGE, error });
@@ -297,7 +304,6 @@ async function sendEmailNotification(
         <p style="font-size: 14px; color: #777; font-weight: bold;">${LOGIN_DASHBOARD_TO_SEE_REVIEW_RESPONSE}, ${jobTitle}: <a style="font-weight: bold;" href="${corsUrl}/search-job/${jobId}">${corsUrl}/search-job/${jobId}</a></p>
         <p style="font-size: 14px; color: #4285F4;"><a href="${corsUrl}">${NAME_RESPONSE}</a></p>
         <p style="font-size: 14px; color: #4285F4;">E-mail: ${supportMail}</p>
-        <p style="font-size: 14px; color: #777;">Tel: ${supportPhone}</p>
       `,
     },
   };

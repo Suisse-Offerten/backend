@@ -40,6 +40,33 @@ const getAllCommunication = async (req, res) => {
   }
 };
 
+// get all communication by seller
+const getAllCommunicationBySeller = async (req, res) => {
+  try {
+    const { page, limit, sellerId } = req.query;
+    const pageNumber = parseInt(page);
+    const limitNumber = parseInt(limit);
+    const skip = (pageNumber - 1) * limitNumber;
+    let filter = {};
+    if (sellerId) {
+      filter.sellerId = sellerId;
+    }
+    const communications = await CommunicationModel.find(filter)
+      .skip(skip)
+      .limit(limitNumber);
+    const totalCommunications = await CommunicationModel.countDocuments(filter);
+    const totalPages = Math.ceil(totalCommunications / limitNumber);
+    res.status(200).json({
+      currentPage: pageNumber,
+      totalPages,
+      totalCommunications,
+      communications,
+    });
+  } catch (error) {
+    res.status(500).json({ message: SERVER_ERROR_MESSAGE, error });
+  }
+};
+
 // get all communication by client
 const getAllCommunicationByClient = async (req, res) => {
   const { id } = req.query;
@@ -108,6 +135,7 @@ const createCommunication = async (req, res) => {
         clientId,
         jobId,
         sellerId,
+        jobTitle: existJob?.jobTitle,
         view: "unseen",
         sellerMessage: sellerMessage
           ? [
@@ -301,7 +329,6 @@ async function sendEmailNotification(
         <p style="font-size: 14px; color: #777; font-weight: bold;">${LOGIN_TO_REPLY_MESSAGE_RESPONSE}, ${jobTitle}: <a style="font-weight: bold;" href="${corsUrl}/search-job/${id}">${corsUrl}/search-job/${id}</a></p>
         <p style="font-size: 14px; color: #4285F4;"><a href="${corsUrl}">${NAME_RESPONSE}</a></p>
         <p style="font-size: 14px; color: #4285F4;">E-mail: ${supportMail}</p>
-        <p style="font-size: 14px; color: #777;">Tel: ${supportPhone}</p>
       `,
     },
   };
@@ -341,4 +368,5 @@ module.exports = {
   deleteCommunication,
   getAllCommunicationByClient,
   updateCommunicationView,
+  getAllCommunicationBySeller,
 };

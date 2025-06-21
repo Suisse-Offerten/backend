@@ -11,6 +11,9 @@ const communicationSchema = mongoose.Schema(
     sellerId: {
       type: String,
     },
+    jobTitle: {
+      type: String,
+    },
     sellerMessage: {
       type: [Object],
       default: [],

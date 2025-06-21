@@ -463,6 +463,7 @@ async function createPerticipation(req, res) {
         clientId: _id,
         jobId,
         sellerId,
+        jobTitle: existJob?.jobTitle,
         view: "unseen",
         sellerMessage: bidMessage
           ? [
@@ -905,7 +906,6 @@ async function sendBidEmail(
         <p style="font-size: 14px; color: #777;">${LOGIN_TO_REPLY_MESSAGE_RESPONSE} klicken Sie hier: <a href="${corsUrl}/client-dashboard" style="font-weight: bold;">klicken Sie hier</a></p>
         <p style="font-size: 14px; color: #4285F4;"><a href="${corsUrl}">${NAME_RESPONSE}</a></p>
         <p style="font-size: 14px; color: #4285F4;">E-mail: ${supportMail}</p>
-        <p style="font-size: 14px; color: #777;">Tel: ${supportPhone}</p>
       `,
     },
   };
@@ -1052,7 +1052,6 @@ async function updateBidEmail(
         <p style="font-size: 14px; color: #777;">${LOGIN_TO_REPLY_MESSAGE_RESPONSE}, klicken Sie hier: <a href="${corsUrl}/client-dashboard" style="font-weight: bold;">${corsUrl}/client-dashboard</a></p>
         <p style="font-size: 14px; color: #4285F4;"><a href="${corsUrl}">${NAME_RESPONSE}</a></p>
         <p style="font-size: 14px; color: #4285F4;">E-mail: ${supportMail}</p>
-        <p style="font-size: 14px; color: #777;">Tel: ${supportPhone}</p>
       `,
     },
   };
@@ -1158,7 +1157,6 @@ async function sendClientEmailNotification(
         <p style="font-size: 14px; color: #777;">${LOGIN_TO_REPLY_MESSAGE_RESPONSE}, klicken Sie hier: <a href="${corsUrl}/client-dashboard" style="font-weight: bold;">${corsUrl}/client-dashboard</a></p>
         <p style="font-size: 14px; color: #4285F4;"><a href="${corsUrl}">${NAME_RESPONSE}</a></p>
         <p style="font-size: 14px; color: #4285F4;">E-mail: ${supportMail}</p>
-        <p style="font-size: 14px; color: #777;">Tel: ${supportPhone}</p>
       `,
     },
   };
@@ -1214,7 +1212,6 @@ async function sendSellerEmailNotification(
         <p style="font-size: 14px; color: #777; font-weight: bold;">${LOGIN_TO_REPLY_MESSAGE_RESPONSE}, ${jobTitle}: <a style="font-weight: bold;" href="${corsUrl}/search-job/${jobId}">${corsUrl}/search-job/${jobId}</a></p>
         <p style="font-size: 14px; color: #4285F4;"><a href="${corsUrl}">${NAME_RESPONSE}</a></p>
         <p style="font-size: 14px; color: #4285F4;">E-mail: ${supportMail}</p>
-        <p style="font-size: 14px; color: #777;">Tel: ${supportPhone}</p>
       `,
     },
   };
@@ -1303,7 +1300,6 @@ async function sendDeleteEmail(
         <p style="font-size: 14px; color: #777; font-weigth: bold;">${HAVE_QUESTION_ASK_CONTACT_RESPONSE} ${jobTitle}: <a style="font-weight: bold;" href="${corsUrl}/search-job/${jobId}">${corsUrl}/search-job/${jobId}</a></p>
         <p style="font-size: 14px; color: #4285F4;"><a href="${corsUrl}">${NAME_RESPONSE}</a></p>
         <p style="font-size: 14px; color: #4285F4;">E-mail: ${supportMail}</p>
-        <p style="font-size: 14px; color: #777;">Tel: ${supportPhone}</p>
       `,
     },
   };

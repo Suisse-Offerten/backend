@@ -409,7 +409,6 @@ async function sendJobEmails(
         <p style="font-size: 14px; color: #777;">${VISIT_TO_SEE_JOB_RESPONSE} <a href="${corsUrl}/search-job/${id}">${SEE_JOBS_RESPONSE}</a></p>
         <p style="font-size: 14px; color: #4285F4;"><a href="${corsUrl}">${NAME_RESPONSE}</a></p>
         <p style="font-size: 14px; color: #4285F4;">E-mail: ${supportMail}</p>
-        <p style="font-size: 14px; color: #777;">Tel: ${supportPhone}</p>
       `,
       },
     };
@@ -468,8 +467,7 @@ async function sendVerificationCode(companyName, email) {
       },
       outro: `<p style="font-size: 14px; color: #777;">${IGNORE_EMAIL_RESPONSE}</p>
         <p style="font-size: 14px; color: #4285F4;"><a href="${corsUrl}">${NAME_RESPONSE}</a></p>
-        <p style="font-size: 14px; color: #4285F4;">E-mail: ${supportMail}</p>
-        <p style="font-size: 14px; color: #777;">Tel: ${supportPhone}</p>`,
+        <p style="font-size: 14px; color: #4285F4;">E-mail: ${supportMail}</p>`,
     },
   };
   const emailBody = mailGenerator.generate(emailTemplate);
@@ -530,8 +528,7 @@ async function CheckClient(req, res) {
           },
           outro: `<p style="font-size: 14px; color: #777;">${GET_VERIFICATION_CODE_RESPONSE}</p>
         <p style="font-size: 14px; color: #4285F4;"><a href="${corsUrl}">${NAME_RESPONSE}</a></p>
-        <p style="font-size: 14px; color: #4285F4;">E-mail: ${supportMail}</p>
-        <p style="font-size: 14px; color: #777;">Tel: ${supportPhone}</p>`,
+        <p style="font-size: 14px; color: #4285F4;">E-mail: ${supportMail}</p>`,
         },
       };
       let mail = await mailGenarator.generate(response);
@@ -587,8 +584,7 @@ async function CheckClient(req, res) {
           },
           outro: `<p style="font-size: 14px; color: #777;">${GET_VERIFICATION_CODE_RESPONSE}</p>
         <p style="font-size: 14px; color: #4285F4;"><a href="${corsUrl}">${NAME_RESPONSE}</a></p>
-        <p style="font-size: 14px; color: #4285F4;">E-mail: ${supportMail}</p>
-        <p style="font-size: 14px; color: #777;">Tel: ${supportPhone}</p>`,
+        <p style="font-size: 14px; color: #4285F4;">E-mail: ${supportMail}</p>`,
         },
       };
       let mail = await mailGenarator.generate(response);
