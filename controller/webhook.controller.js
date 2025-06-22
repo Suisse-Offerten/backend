@@ -18,7 +18,7 @@ const {
 } = require("../utils/email.response");
 const supportMail = process.env.SUPPORT_MAIL;
 const corsUrl = process.env.CORS_URL;
-const membershipSecret = process.env.TEST_WEBHOOK_SECRET;
+const membershipSecret = process.env.MEMBERSHIP_WEBHOOK_SECRET;
 const creditSecret = process.env.CREDIT_WEBHOOK_SECRET;
 const SMTP = process.env.EMAIL_SERVER_KEY;
 const PORT = process.env.EMAIL_SERVER_PORT;
