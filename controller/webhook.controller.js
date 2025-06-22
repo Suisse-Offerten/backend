@@ -17,9 +17,8 @@ const {
   PAYMENT_SUBJECT_RESPONSE,
 } = require("../utils/email.response");
 const supportMail = process.env.SUPPORT_MAIL;
-const supportPhone = process.env.SUPPORT_PHONE;
 const corsUrl = process.env.CORS_URL;
-const membershipSecret = process.env.MEMBERSHIP_WEBHOOK_SECRET;
+const membershipSecret = process.env.TEST_WEBHOOK_SECRET;
 const creditSecret = process.env.CREDIT_WEBHOOK_SECRET;
 const SMTP = process.env.EMAIL_SERVER_KEY;
 const PORT = process.env.EMAIL_SERVER_PORT;
@@ -38,9 +37,9 @@ async function membershipWebhook(req, res) {
       if (!transaction) {
         return res.status(404).json({ error: "Transaction not found" });
       }
-      const existSeller = await SellerModel.findOne({ _id: sellerId });
       const { sellerId, memberShip } = transaction;
       const { credit, planTime } = memberShip || {};
+      const existSeller = await SellerModel.findOne({ _id: sellerId });
       let membershipComplete;
 
       if (credit > 0) {
@@ -74,6 +73,7 @@ async function membershipWebhook(req, res) {
     }
     res.status(200).json({ received: true });
   } catch (error) {
+    console.log(error);
     return res.status(500).json({ message: SERVER_ERROR_MESSAGE, error });
   }
 }
