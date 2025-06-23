@@ -51,7 +51,7 @@ async function createMembershipPayment(req, res) {
   const failedUrl = `${baseURL}/seller-dashboard/membership/buy`;
   try {
     const existSeller = await SellerModel.findOne({ _id: id });
-    const { memberShip, username, email } = existSeller || {};
+    const { username, email } = existSeller || {};
     if (item?.plan === "free-plan") {
       const updateMembership = {
         memberShip: item,
@@ -95,7 +95,7 @@ async function createMembershipPayment(req, res) {
       cost: currentPrice,
       status: "pending",
     });
-    if (memberShip?.credit > 0) {
+    if (existSeller?.memberShipStatus === "Active") {
       await SellerModel.findByIdAndUpdate(
         id,
         {

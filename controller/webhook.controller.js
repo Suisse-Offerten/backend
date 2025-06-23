@@ -42,7 +42,7 @@ async function membershipWebhook(req, res) {
       const existSeller = await SellerModel.findOne({ _id: sellerId });
       let membershipComplete;
 
-      if (credit > 0) {
+      if (existSeller?.memberShipStatus === "Active") {
         membershipComplete = {
           credits: credit + existSeller?.extendCredit,
           planTime: planTime + existSeller?.extendTime,
@@ -51,6 +51,7 @@ async function membershipWebhook(req, res) {
           extendTime: 0,
           extendMembership: {},
           memberShipStatus: "Active",
+          membershipActive: new Date().toISOString().replace("Z", "+00:00"),
         };
       } else {
         membershipComplete = {
@@ -73,7 +74,6 @@ async function membershipWebhook(req, res) {
     }
     res.status(200).json({ received: true });
   } catch (error) {
-    console.log(error);
     return res.status(500).json({ message: SERVER_ERROR_MESSAGE, error });
   }
 }
