@@ -56,9 +56,9 @@ const {
   OUTRO_RESPONSE,
   SINGNATURE_RESPONSE,
   LOGIN_TO_REPLY_MESSAGE_RESPONSE,
+  client_dashboard,
 } = require("../utils/email.response");
 const supportMail = process.env.SUPPORT_MAIL;
-const supportPhone = process.env.SUPPORT_PHONE;
 const corsUrl = process.env.CORS_URL;
 const SMTP = process.env.EMAIL_SERVER_KEY;
 const PORT = process.env.EMAIL_SERVER_PORT;
@@ -252,7 +252,7 @@ async function sendVerificationEmail(companyName, email, token) {
           link: `${baseURL}/verify-email/${token}`,
         },
       },
-      outro: `<p style="font-size: 14px; color: #777;">${PLEASE_LOGIN_TO_SEE_PROCESS_RESPONSE}, Armaturenbrett: <a href="${corsUrl}/seller-dashboard" style="font-weight: bold;">${corsUrl}/seller-dashboard</a></p>
+      outro: `<p style="font-size: 14px; color: #777;">${PLEASE_LOGIN_TO_SEE_PROCESS_RESPONSE}, Armaturenbrett: <a href="${corsUrl}/seller-dashboard" style="font-weight: bold;">${client_dashboard}</a></p>
         <p style="font-size: 14px; color: #4285F4;"><a href="${corsUrl}">${NAME_RESPONSE}</a></p>
         <p style="font-size: 14px; color: #4285F4;">E-mail: ${supportMail}</p>`,
     },
@@ -711,7 +711,7 @@ async function sendEmailNotification(name, email, subject, verify) {
           <strong style="font-size: 16px;">${MESSAGE_RESPONSE}:</strong>
           <p style="font-size: 14px; color: #555;">Ihre ${verify} wurde verifiziert</p>
         </div>
-        <p style="font-size: 14px; color: #777;">${PLEASE_LOGIN_TO_SEE_PROCESS_RESPONSE}, Armaturenbrett: <a href="${corsUrl}/seller-dashboard" style="font-weight: bold;">${corsUrl}/seller-dashboard</a></p>
+        <p style="font-size: 14px; color: #777;">${PLEASE_LOGIN_TO_SEE_PROCESS_RESPONSE}, Armaturenbrett: <a href="${corsUrl}/seller-dashboard" style="font-weight: bold;">${client_dashboard}</a></p>
         <p style="font-size: 14px; color: #4285F4;"><a href="${corsUrl}">${NAME_RESPONSE}</a></p>
         <p style="font-size: 14px; color: #4285F4;">E-mail: ${supportMail}</p>
       `,
@@ -1061,7 +1061,7 @@ async function sendResetPasswordLink(req, res) {
               },
             ],
           },
-          outro: `<p style="font-size: 14px; color: #777;">${GET_RESET_PASSWORD_LINK_RESPONSE}, <a href="${corsUrl}/seller-dashboard" style="font-weight: bold;">Armaturenbrett</a></p>
+          outro: `<p style="font-size: 14px; color: #777;">${GET_RESET_PASSWORD_LINK_RESPONSE}, <a href="${corsUrl}/seller-dashboard" style="font-weight: bold;">${client_dashboard}</a></p>
         <p style="font-size: 14px; color: #4285F4;"><a href="${corsUrl}">${NAME_RESPONSE}</a></p>
         <p style="font-size: 14px; color: #4285F4;">E-mail: ${supportMail}</p>`,
         },

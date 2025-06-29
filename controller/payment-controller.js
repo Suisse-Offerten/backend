@@ -6,7 +6,6 @@ const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 const {
   SERVER_ERROR_MESSAGE,
   DATA_NOT_FOUND_MESSAGE,
-  MEMBERSHIP_ALREADY_CREATE_MESSAGE,
   DELETE_SUCCESS_MESSAGE,
   INVALID_PLAN_MESSAGE,
 } = require("../utils/response");

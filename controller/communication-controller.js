@@ -25,7 +25,6 @@ const {
 const EMAIL = process.env.EMAIL;
 const PASSWORD = process.env.PASSWORD;
 const supportMail = process.env.SUPPORT_MAIL;
-const supportPhone = process.env.SUPPORT_PHONE;
 const corsUrl = process.env.CORS_URL;
 const SMTP = process.env.EMAIL_SERVER_KEY;
 const PORT = process.env.EMAIL_SERVER_PORT;

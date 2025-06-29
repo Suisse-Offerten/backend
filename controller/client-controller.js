@@ -58,7 +58,6 @@ const {
   SINGNATURE_RESPONSE,
 } = require("../utils/email.response");
 const supportMail = process.env.SUPPORT_MAIL;
-const supportPhone = process.env.SUPPORT_PHONE;
 const corsUrl = process.env.CORS_URL;
 
 // Get All Client

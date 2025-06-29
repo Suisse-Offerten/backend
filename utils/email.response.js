@@ -15,6 +15,7 @@ const emailResponse = {
   JOB_DESCRIPTION_RESPONSE: "Beschreibung",
   JOB_LOCATION_RESPONSE: "Arbeitsort",
   JOB_NUMBER_RESPONSE: "Auftragsnummer",
+  client_dashboard: "Überprüfen Sie Ihr Dashboard",
   SEE_JOBS_RESPONSE: "Aufträge finden",
   USE_OTP_TO_CHANGE_PASSWORD_RESPONSE:
     "Bitte verwenden Sie diesen Code, um Ihr Passwort zu ändern.",

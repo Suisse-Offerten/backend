@@ -65,11 +65,12 @@ const {
   HAVE_QUESTION_ASK_CONTACT_RESPONSE,
   SINGNATURE_RESPONSE,
   OUTRO_RESPONSE,
+  client_dashboard,
+  SEE_JOBS_RESPONSE,
 } = require("../utils/email.response");
 const EMAIL = process.env.EMAIL;
 const PASSWORD = process.env.PASSWORD;
 const supportMail = process.env.SUPPORT_MAIL;
-const supportPhone = process.env.SUPPORT_PHONE;
 const corsUrl = process.env.CORS_URL;
 const SMTP = process.env.EMAIL_SERVER_KEY;
 const PORT = process.env.EMAIL_SERVER_PORT;
@@ -903,7 +904,7 @@ async function sendBidEmail(
           <strong style="font-size: 16px;">${OFFER_NOTE_RESPONSE}: </strong>
           <p style="font-size: 14px; color: #555;">${offerNote}</p>
         </div>
-        <p style="font-size: 14px; color: #777;">${LOGIN_TO_REPLY_MESSAGE_RESPONSE} klicken Sie hier: <a href="${corsUrl}/client-dashboard" style="font-weight: bold;">klicken Sie hier</a></p>
+        <p style="font-size: 14px; color: #777;">${LOGIN_TO_REPLY_MESSAGE_RESPONSE} klicken Sie hier: <a href="${corsUrl}/client-dashboard" style="font-weight: bold;">${client_dashboard}</a></p>
         <p style="font-size: 14px; color: #4285F4;"><a href="${corsUrl}">${NAME_RESPONSE}</a></p>
         <p style="font-size: 14px; color: #4285F4;">E-mail: ${supportMail}</p>
       `,
@@ -1049,7 +1050,7 @@ async function updateBidEmail(
           <strong style="font-size: 16px;">${OFFER_NOTE_RESPONSE}: </strong>
           <p style="font-size: 14px; color: #555;">${offerNote}</p>
         </div>
-        <p style="font-size: 14px; color: #777;">${LOGIN_TO_REPLY_MESSAGE_RESPONSE}, klicken Sie hier: <a href="${corsUrl}/client-dashboard" style="font-weight: bold;">${corsUrl}/client-dashboard</a></p>
+        <p style="font-size: 14px; color: #777;">${LOGIN_TO_REPLY_MESSAGE_RESPONSE}, klicken Sie hier: <a href="${corsUrl}/client-dashboard" style="font-weight: bold;">${client_dashboard}</a></p>
         <p style="font-size: 14px; color: #4285F4;"><a href="${corsUrl}">${NAME_RESPONSE}</a></p>
         <p style="font-size: 14px; color: #4285F4;">E-mail: ${supportMail}</p>
       `,
@@ -1154,7 +1155,7 @@ async function sendClientEmailNotification(
           <strong style="font-size: 16px;">${MESSAGE_RESPONSE}:</strong>
           <p style="font-size: 14px; color: #555;">${message}</p>
         </div>
-        <p style="font-size: 14px; color: #777;">${LOGIN_TO_REPLY_MESSAGE_RESPONSE}, klicken Sie hier: <a href="${corsUrl}/client-dashboard" style="font-weight: bold;">${corsUrl}/client-dashboard</a></p>
+        <p style="font-size: 14px; color: #777;">${LOGIN_TO_REPLY_MESSAGE_RESPONSE}, klicken Sie hier: <a href="${corsUrl}/client-dashboard" style="font-weight: bold;">${client_dashboard}</a></p>
         <p style="font-size: 14px; color: #4285F4;"><a href="${corsUrl}">${NAME_RESPONSE}</a></p>
         <p style="font-size: 14px; color: #4285F4;">E-mail: ${supportMail}</p>
       `,
@@ -1209,7 +1210,7 @@ async function sendSellerEmailNotification(
           <strong style="font-size: 16px;">${MESSAGE_RESPONSE}:</strong>
           <p style="font-size: 14px; color: #555;">${message}</p>
         </div>
-        <p style="font-size: 14px; color: #777; font-weight: bold;">${LOGIN_TO_REPLY_MESSAGE_RESPONSE}, ${jobTitle}: <a style="font-weight: bold;" href="${corsUrl}/search-job/${jobId}">${corsUrl}/search-job/${jobId}</a></p>
+        <p style="font-size: 14px; color: #777; font-weight: bold;">${LOGIN_TO_REPLY_MESSAGE_RESPONSE}, ${jobTitle}: <a style="font-weight: bold;" href="${corsUrl}/search-job/${jobId}">${SEE_JOBS_RESPONSE}</a></p>
         <p style="font-size: 14px; color: #4285F4;"><a href="${corsUrl}">${NAME_RESPONSE}</a></p>
         <p style="font-size: 14px; color: #4285F4;">E-mail: ${supportMail}</p>
       `,
@@ -1297,7 +1298,7 @@ async function sendDeleteEmail(
           <strong style="font-size: 16px;">${MESSAGE_RESPONSE}:</strong>
           <p style="font-size: 14px; color: #555;">${OFFER_VAILATION_ERROR_RESPONSE}</p>
         </div>
-        <p style="font-size: 14px; color: #777; font-weigth: bold;">${HAVE_QUESTION_ASK_CONTACT_RESPONSE} ${jobTitle}: <a style="font-weight: bold;" href="${corsUrl}/search-job/${jobId}">${corsUrl}/search-job/${jobId}</a></p>
+        <p style="font-size: 14px; color: #777; font-weigth: bold;">${HAVE_QUESTION_ASK_CONTACT_RESPONSE} ${jobTitle}: <a style="font-weight: bold;" href="${corsUrl}/search-job/${jobId}">${SEE_JOBS_RESPONSE}</a></p>
         <p style="font-size: 14px; color: #4285F4;"><a href="${corsUrl}">${NAME_RESPONSE}</a></p>
         <p style="font-size: 14px; color: #4285F4;">E-mail: ${supportMail}</p>
       `,
