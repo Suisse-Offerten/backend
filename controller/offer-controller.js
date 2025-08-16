@@ -438,16 +438,35 @@ async function createPerticipation(req, res) {
   const existSeller = await SellerModel.findOne({ _id: sellerId });
   const existJob = await JobModel.findOne({ _id: jobId });
   const email = existJob?.jobEmail;
+  const existAllOffer = await OfferModel.find({ jobId: jobId });
   const existClient = await ClientModel.findOne({ email: email });
-  const existoffer = await OfferModel.findOne({ jobId: jobId });
   const { credits, username } = existSeller || {};
   const { _id, firstname } = existClient || {};
   const { jobTitle, placeBid } = existJob || {};
 
   try {
-    if (existoffer?.length >= 5) {
+    if (existAllOffer?.length >= 5) {
       return res.status(400).json({ message: BID_NOT_ACCEPT_MESSAGE });
     }
+
+    // close job whrn bid is 5
+    const bid = placeBid > 0 ? placeBid + 1 : 1;
+    const UpdateJob = {
+      placeBid: bid,
+    };
+    await JobModel.findByIdAndUpdate(jobId, UpdateJob, {
+      new: true,
+    });
+    if (existJob?.placeBid === 4) {
+      const closeJob = {
+        status: "close",
+      };
+      await JobModel.findByIdAndUpdate(jobId, closeJob, {
+        new: true,
+      });
+    }
+
+    // create new perticipation here
     if (credits >= jobCredit) {
       const updateSellerCredit = {
         credits: credits - jobCredit,
@@ -476,10 +495,7 @@ async function createPerticipation(req, res) {
             ]
           : [],
       });
-      const bid = placeBid > 0 ? placeBid + 1 : 1;
-      const UpdateJob = {
-        placeBid: bid,
-      };
+
       await sendClientEmailNotification(
         firstname,
         email,
@@ -492,9 +508,7 @@ async function createPerticipation(req, res) {
       await SellerModel.findByIdAndUpdate(sellerId, updateSellerCredit, {
         new: true,
       });
-      await JobModel.findByIdAndUpdate(jobId, UpdateJob, {
-        new: true,
-      });
+
       res.status(200).json({ message: PARTICIPATION_SUCCESS_MESSAGE });
     } else {
       res.status(400).json({ message: ENOUGH_CREDIT_REQUIRE_MESSAGE });
